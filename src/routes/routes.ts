@@ -12,6 +12,8 @@ import { withApiKey } from '../lib/middleware';
 export const router = AutoRouter({ base: '/audio', catch: undefined });
 
 router.get('/list', withApiKey, async (request: IRequest, env: Env) => {
+
+    console.log(request)
     await verifyApiKey(request, env);
 
     log('info', 'audio_list', `Searching for audio with: ${request.url}`, request.query);

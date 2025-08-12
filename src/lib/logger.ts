@@ -26,7 +26,7 @@ export function log(level: LogLevel, event: string, message: string, data?: any,
 function prepareForLogging(obj: any, maxArrayItems: number, maxDepth: number, currentDepth: number): any {
     if (obj === null) return null;
     if (obj === undefined) return undefined;
-    
+
     // Handle non-serializable or special types
     if (typeof obj === 'function') return '[Function]';
     if (typeof obj === 'symbol') return '[Symbol]';
@@ -37,7 +37,7 @@ function prepareForLogging(obj: any, maxArrayItems: number, maxDepth: number, cu
             stack: obj.stack
         };
     }
-    
+
     if (currentDepth > maxDepth) return '[Object]';
 
     if (Array.isArray(obj)) {
