@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# sqlite3 data/data.db < data/entry_and_pitch_db.sql
+cat data/entry_and_pitch_db.sql | tee /dev/tty | sqlite3 data/data-2.db
+

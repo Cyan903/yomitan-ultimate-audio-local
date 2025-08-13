@@ -3,6 +3,7 @@ import { katakanaToHiragana } from './utils';
 
 import type { AudioSource } from './queryUtils';
 import { log } from './logger';
+import { DB } from "./localDB";
 
 export interface AudioEntry {
     expression: string;
@@ -30,15 +31,21 @@ export async function queryAudioDB(term: string, reading: string, sources: Audio
 
     const query = `SELECT expression, reading, source, file, display FROM entries ${baseCondition}`;
 
-    let d1results: D1Result = await env.yomitan_audio_d1_db
-        .prepare(query)
-        .bind(...params)
-        .all();
+    try {
+        // Build statement
+        const res = await env.DB.prepare(query);
+        await res.bind([...params]);
 
-    if (d1results.success) {
-        return d1results.results as AudioEntry[];
-    } else {
-        log('error', 'query_pitch_db_failed', `Database query failed for term: ${term}, reading: ${reading}`, { term: term, reading: reading, d1_result: d1results.error || 'Unknown Error' });
+        return await res.all() as AudioEntry[];
+    } catch (e: any) {
+        log(
+            'error',
+            'query_pitch_db_failed',
+            `Database query failed for term: ${term},
+            reading: ${reading}`,
+            { term: term, reading: reading, d1_result: String(e) }
+        );
+
         throw new StatusError(500, 'Database query failed');
     }
 }

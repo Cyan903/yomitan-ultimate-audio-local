@@ -23,22 +23,23 @@ export async function queryPitchDB(term: string, reading: string, env: Env): Pro
 
     const query = `SELECT id, expression, reading, pitch, count FROM pitch_accents ${baseCondition}`;
 
-    let d1results: D1Result = await env.yomitan_audio_d1_db
-        .prepare(query)
-        .bind(...params)
-        .all();
+    try {
+        // Build statement
+        const res = await env.DB.prepare(query);
+        await res.bind([...params]);
 
-    if (d1results.success) {
-        let pitch_entries = d1results.results as PitchDBEntry[];
+        // Sort pitch entries
+        const pitch_entries = await res.all() as PitchDBEntry[];
         pitch_entries.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 
         return pitch_entries;
-    } else {
+    } catch (e: any) {
         log('error', 'query_pitch_db_failed', `Failed to query pitch database for term: ${term}${reading ? ', reading: ' + reading : ''}`, {
             term: term,
             reading: reading,
-            d1_result: d1results.error || 'Unknown Error',
+            d1_result: String(e),
         });
+
         throw new StatusError(500, 'Database query failed.');
     }
 }

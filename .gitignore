@@ -1,10 +1,14 @@
+# Config
 .vscode
 .wrangler
 .dev.vars
-bundled
-node_modules
 wrangler.toml
-data/*files
-*txt
-*zip
-*sql
+
+# Node
+node_modules
+bundled
+
+# Export
+/data/*
+!/data/.gitkeep
+

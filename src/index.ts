@@ -1,21 +1,24 @@
 import http from "http";
 import router from "./routes/router"
+import initDB from "./lib/localDB"
 
 // TODO: Don't hardcode
 const PORT = 3000;
+const HTTP = "http";
 
 const server = http.createServer(async (req, res) => {
-    // TODO: http should probably not be hardcoded
-    const url = new URL(req.url || "/", "http://${req.headers.host}");
+    const url = new URL(req.url || "/", `${HTTP}://${req.headers.host}`);
     const request = new Request(url, { method: req.method });
+    const DB = await initDB();
 
     const response = await router
         .fetch(request, {
             AUTHENTICATION_ENABLED: true,
             API_KEYS: "abc,123",
+            DB,
 
             // Polly
-            AWS_POLLY_ENABLED: false,
+            AWS_POLLY_ENABLED: true,
             AWS_ACCESS_KEY_ID: "",
             AWS_SECRET_ACCESS_KEY: "",
         })
