@@ -18,7 +18,7 @@ const server = http.createServer(async (req, res) => {
             DB,
 
             // Polly
-            AWS_POLLY_ENABLED: true,
+            AWS_POLLY_ENABLED: false,
             AWS_ACCESS_KEY_ID: "",
             AWS_SECRET_ACCESS_KEY: "",
         })

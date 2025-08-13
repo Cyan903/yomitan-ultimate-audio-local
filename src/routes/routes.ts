@@ -65,7 +65,7 @@ router.get('/get/:source/:folder/:file', withApiKey, async (request: IRequest, e
     return mp3(audio, { status: 200 });
 });
 
-router.get('/tts', withApiKey, async (request: IRequest, env: Env, context: ExecutionContext) => {
+router.get('/tts', withApiKey, async (request: IRequest, env: Env) => {
     await verifyApiKey(request, env);
 
     const [term, reading] = await unpack_term_reading(request);
@@ -73,7 +73,7 @@ router.get('/tts', withApiKey, async (request: IRequest, env: Env, context: Exec
 
     const tts_identifier = encodeURIComponent(term + reading + pitch);
 
-    const audio = await fetchAudioTTS(tts_identifier, env);
+    const audio = await fetchAudioTTS(tts_identifier);
 
     if (audio !== null) {
         log('info', 'using_cached_tts', `Using cached TTS data: ${term}, ${reading}, ${pitch} `, {
@@ -86,8 +86,7 @@ router.get('/tts', withApiKey, async (request: IRequest, env: Env, context: Exec
 
     const generatedAudio = await generateTTSAudio(term, reading, pitch, env);
 
-    context.waitUntil(saveAudioTTS(tts_identifier, generatedAudio, env));
-
+    await saveAudioTTS(tts_identifier, generatedAudio, env);
     return mp3(generatedAudio, { status: 200 });
 });
 

@@ -12,6 +12,14 @@ export async function get(key: string) {
     }
 }
 
-export async function put(key: string) {
-    return false
+export async function put(key: string, mp3: Blob) {
+    try {
+        await fs.writeFile(path.join(PATH, key), Buffer.from(
+            await mp3.arrayBuffer()
+        ));
+
+        return true;
+    } catch (e: any) {
+        return false;
+    }
 }
