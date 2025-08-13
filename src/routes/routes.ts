@@ -10,6 +10,7 @@ import { generateTTSAudio } from '../lib/awsPolly';
 import { withApiKey } from '../lib/middleware';
 
 export const router = AutoRouter({ base: '/audio', catch: undefined });
+export const mp3 = createResponse('audio/mpeg');
 
 router.get('/list', withApiKey, async (request: IRequest, env: Env) => {
     await verifyApiKey(request, env);
@@ -40,8 +41,6 @@ router.get('/list', withApiKey, async (request: IRequest, env: Env) => {
     return json(yomitanResponses, { status: 200 });
 });
 
-export const mp3 = createResponse('audio/mpeg');
-
 router.get('/get/:source/:file', withApiKey, async (request: IRequest, env: Env) => {
     await verifyApiKey(request, env);
 
@@ -50,7 +49,7 @@ router.get('/get/:source/:file', withApiKey, async (request: IRequest, env: Env)
 
     log('info', 'audio_get', `Fetching audio: ${source}/${file}`, { source, file });
 
-    const audio = await returnAudio(source, file, env);
+    const audio = await returnAudio(source, file);
     return mp3(audio, { status: 200 });
 });
 
@@ -62,7 +61,7 @@ router.get('/get/:source/:folder/:file', withApiKey, async (request: IRequest, e
 
     log('info', 'audio_get', `Fetching audio: ${source}/${file}`, { source, file });
 
-    const audio = await returnAudio(source, file, env);
+    const audio = await returnAudio(source, file);
     return mp3(audio, { status: 200 });
 });
 
@@ -93,6 +92,5 @@ router.get('/tts', withApiKey, async (request: IRequest, env: Env, context: Exec
 });
 
 router.all('*', () => {
-    // Shouldn't it be 404?
-    return error(400);
+    return error(400); // Shouldn't it be 404?
 });

@@ -3,7 +3,6 @@ import { katakanaToHiragana } from './utils';
 
 import type { AudioSource } from './queryUtils';
 import { log } from './logger';
-import { DB } from "./localDB";
 
 export interface AudioEntry {
     expression: string;

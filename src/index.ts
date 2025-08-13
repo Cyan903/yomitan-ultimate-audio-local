@@ -1,6 +1,6 @@
 import http from "http";
 import router from "./routes/router"
-import initDB from "./lib/localDB"
+import initDB from "./local/db"
 
 // TODO: Don't hardcode
 const PORT = 3000;
@@ -24,10 +24,10 @@ const server = http.createServer(async (req, res) => {
         })
         .catch((err: Error) => new Response(err.message, { status: 500 }));
 
-    const body = await response.text();
+    const body = await response.arrayBuffer();
 
     res.writeHead(response.status, Object.fromEntries(response.headers));
-    res.end(body);
+    res.end(Buffer.from(body));
 });
 
 server.listen(PORT, () => {
