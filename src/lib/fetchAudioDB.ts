@@ -1,11 +1,11 @@
-import { StatusError } from 'itty-router';
+import { StatusError } from "itty-router";
 import { get, put } from "../local/files";
 
 export async function fetchAudioDB(source: string, file: string): Promise<Blob> {
     const audio = await get(`${source}_files/${file}`);
 
     if (!audio || audio == 404) {
-        throw new StatusError(404, 'File not found');
+        throw new StatusError(404, "File not found");
     }
 
     return new Blob([audio], { type: "audio/mpeg" });

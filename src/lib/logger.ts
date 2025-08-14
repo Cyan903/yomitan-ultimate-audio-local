@@ -1,6 +1,6 @@
-import { error, IRequest, StatusError } from 'itty-router';
+import { error, IRequest, StatusError } from "itty-router";
 
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface LogOptions {
     truncateArrays?: number; // Max number of items to include from arrays
@@ -28,32 +28,31 @@ function prepareForLogging(obj: any, maxArrayItems: number, maxDepth: number, cu
     if (obj === undefined) return undefined;
 
     // Handle non-serializable or special types
-    if (typeof obj === 'function') return '[Function]';
-    if (typeof obj === 'symbol') return '[Symbol]';
+    if (typeof obj === "function") return "[Function]";
+    if (typeof obj === "symbol") return "[Symbol]";
     if (obj instanceof Error) {
         return {
             name: obj.name,
             message: obj.message,
-            stack: obj.stack
+            stack: obj.stack,
         };
     }
 
-    if (currentDepth > maxDepth) return '[Object]';
+    if (currentDepth > maxDepth) return "[Object]";
 
     if (Array.isArray(obj)) {
         if (obj.length > maxArrayItems) {
             return [...obj.slice(0, maxArrayItems), `[...${obj.length - maxArrayItems} more items]`];
         }
+
         return obj.map((item) => prepareForLogging(item, maxArrayItems, maxDepth, currentDepth + 1));
     }
 
-    if (obj && typeof obj === 'object') {
+    if (obj && typeof obj === "object") {
         try {
-            return Object.fromEntries(
-                Object.entries(obj).map(([key, val]) => [key, prepareForLogging(val, maxArrayItems, maxDepth, currentDepth + 1)])
-            );
+            return Object.fromEntries(Object.entries(obj).map(([key, val]) => [key, prepareForLogging(val, maxArrayItems, maxDepth, currentDepth + 1)]));
         } catch (e) {
-            return '[Unserializable Object]';
+            return "[Unserializable Object]";
         }
     }
 
@@ -65,12 +64,12 @@ export const errorHandler = (err: Error, request: IRequest) => {
         return error(err.status, { message: err.message });
     }
 
-    log('error', 'unhandled_error', `Unhandled error: ${err.message}`, {
+    log("error", "unhandled_error", `Unhandled error: ${err.message}`, {
         url: request.url,
         method: request.method,
         error: err.message,
         stack: err.stack,
     });
 
-    return error(500, { message: 'Internal Server Error' });
+    return error(500, { message: "Internal Server Error" });
 };

@@ -1,26 +1,27 @@
 import http from "http";
-import router from "./routes/router"
-import initDB from "./local/db"
+import router from "./routes/router";
+import initDB from "./local/db";
 
-// TODO: Don't hardcode
-const PORT = 3000;
-const HTTP = "http";
+import "dotenv/config";
+
+const PORT = parseInt(process.env.PORT);
+const HOST = process.env.HOST;
 
 const server = http.createServer(async (req, res) => {
-    const url = new URL(req.url || "/", `${HTTP}://${req.headers.host}`);
+    const url = new URL(req.url || "/", `${HOST}:${PORT}`);
     const request = new Request(url, { method: req.method });
     const DB = await initDB();
 
     const response = await router
         .fetch(request, {
-            AUTHENTICATION_ENABLED: true,
-            API_KEYS: "abc,123",
+            AUTHENTICATION_ENABLED: process.env.AUTHENTICATION_ENABLED == "true",
+            API_KEYS: process.env.API_KEYS,
             DB,
 
             // Polly
-            AWS_POLLY_ENABLED: true,
-            AWS_ACCESS_KEY_ID: "",
-            AWS_SECRET_ACCESS_KEY: "",
+            AWS_POLLY_ENABLED: process.env.AWS_POLLY_ENABLED == "true",
+            AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+            AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
         })
         .catch((err: Error) => new Response(err.message, { status: 500 }));
 
@@ -30,6 +31,4 @@ const server = http.createServer(async (req, res) => {
     res.end(Buffer.from(body));
 });
 
-server.listen(PORT, () => {
-    console.log(`Running on :${PORT}`);
-});
+server.listen(PORT, () => console.log(`yomitan-ultimate-audio-local on ${HOST}:${PORT}`));

@@ -1,8 +1,8 @@
-import { IRequest } from 'itty-router';
-import type { AudioEntry } from './queryAudioDB';
+import { IRequest } from "itty-router";
+import type { AudioEntry } from "./queryAudioDB";
 
 export interface YomitanResponse {
-    type: 'audioSourceList';
+    type: "audioSourceList";
     audioSources: YomitanAudioSource[];
 }
 
@@ -11,28 +11,23 @@ export interface YomitanAudioSource {
     url: string;
 }
 
-export async function generateYomitanResponseObject(
-    entries: AudioEntry[],
-    ttsEntries: YomitanAudioSource[],
-    request: IRequest,
-    env: Env
-): Promise<YomitanResponse> {
+export async function generateYomitanResponseObject(entries: AudioEntry[], ttsEntries: YomitanAudioSource[], request: IRequest, env: Env): Promise<YomitanResponse> {
     const audioSources = entries.map((entry) => {
         let audioUrl;
         const url = new URL(request.url);
 
-        if (entry.file.includes('/')) {
-            const parts = entry.file.split('/');
+        if (entry.file.includes("/")) {
+            const parts = entry.file.split("/");
             const folder = encodeURIComponent(parts[0]);
             const file = encodeURIComponent(parts[1]);
+
             audioUrl = new URL(`/audio/get/${entry.source}/${folder}/${file}`, url.origin);
         } else {
-            const file = encodeURIComponent(entry.file);
-            audioUrl = new URL(`/audio/get/${entry.source}/${file}`, url.origin);
+            audioUrl = new URL(`/audio/get/${entry.source}/${encodeURIComponent(entry.file)}`, url.origin);
         }
 
         if (env.AUTHENTICATION_ENABLED) {
-            audioUrl.searchParams.set('apiKey', request.apiKey);
+            audioUrl.searchParams.set("apiKey", request.apiKey);
         }
 
         return {
@@ -42,7 +37,7 @@ export async function generateYomitanResponseObject(
     });
 
     return {
-        type: 'audioSourceList',
+        type: "audioSourceList",
         audioSources: [...audioSources, ...ttsEntries],
     };
 }

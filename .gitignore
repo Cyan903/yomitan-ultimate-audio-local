@@ -1,8 +1,6 @@
 # Config
 .vscode
-.wrangler
-.dev.vars
-wrangler.toml
+.env
 
 # Node
 node_modules

@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"aws4fetch": "^1.0.20",
+		"dotenv": "^17.2.1",
 		"itty-fetcher": "^0.9.4",
 		"itty-router": "^5.0.18",
 		"sqlite": "^5.1.1",

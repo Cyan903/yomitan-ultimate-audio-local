@@ -1,8 +1,8 @@
-import { StatusError } from 'itty-router';
-import { katakanaToHiragana } from './utils';
+import { StatusError } from "itty-router";
+import { katakanaToHiragana } from "./utils";
 
-import type { AudioSource } from './queryUtils';
-import { log } from './logger';
+import type { AudioSource } from "./queryUtils";
+import { log } from "./logger";
 
 export interface AudioEntry {
     expression: string;
@@ -13,17 +13,17 @@ export interface AudioEntry {
 }
 
 export async function queryAudioDB(term: string, reading: string, sources: AudioSource[], env: Env): Promise<AudioEntry[]> {
-    let baseCondition = 'WHERE expression = ?';
+    let baseCondition = "WHERE expression = ?";
     const params: any[] = [term];
 
-    if (reading && reading.trim() !== '') {
+    if (reading && reading.trim() !== "") {
         baseCondition = `WHERE (expression = ? OR reading = ?)`;
         const convertedReading = katakanaToHiragana(reading);
         params.push(convertedReading);
     }
 
-    if (sources.length > 0 && !sources.includes('all')) {
-        const placeholders = sources.map(() => '?').join(', ');
+    if (sources.length > 0 && !sources.includes("all")) {
+        const placeholders = sources.map(() => "?").join(", ");
         baseCondition += ` AND source IN (${placeholders})`;
         params.push(...sources);
     }
@@ -35,24 +35,26 @@ export async function queryAudioDB(term: string, reading: string, sources: Audio
         const res = await env.DB.prepare(query);
         await res.bind([...params]);
 
-        return await res.all() as AudioEntry[];
+        return (await res.all()) as AudioEntry[];
     } catch (e: any) {
         log(
-            'error',
-            'query_pitch_db_failed',
+            "error",
+            "query_pitch_db_failed",
             `Database query failed for term: ${term},
             reading: ${reading}`,
-            { term: term, reading: reading, d1_result: String(e) }
+            { term: term, reading: reading, d1_result: String(e) },
         );
 
-        throw new StatusError(500, 'Database query failed');
+        throw new StatusError(500, "Database query failed");
     }
 }
 
 export async function generateDisplayNames(entries: AudioEntry[], term: string, reading: string): Promise<string[]> {
     let names: string[] = [];
+
     entries.forEach((entry) => {
         let name = `${entry.source}`;
+
         if (entry.display) {
             name += `: ${entry.display}`;
         }
@@ -87,9 +89,10 @@ export async function sortResults(entries: AudioEntry[], names: string[]): Promi
 
     const getMatchTypePriority = (name?: string): number => {
         if (!name) return 3;
-        if (name.includes('(Expression+Reading)')) return 0;
-        if (name.includes('(Only Expression)')) return 1;
-        if (name.includes('(Only Reading)')) return 2;
+        if (name.includes("(Expression+Reading)")) return 0;
+        if (name.includes("(Only Expression)")) return 1;
+        if (name.includes("(Only Reading)")) return 2;
+
         return 3;
     };
 

@@ -3,7 +3,7 @@ import { open } from "sqlite";
 
 export default async () => {
     return await open({
-        filename: './data/data.db',
-        driver: sqlite3.Database
+        filename: "./data/data.db",
+        driver: sqlite3.Database,
     });
-}
+};

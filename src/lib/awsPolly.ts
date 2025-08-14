@@ -1,16 +1,16 @@
-import { AwsClient } from 'aws4fetch';
-import { StatusError } from 'itty-router';
-import { log } from './logger';
+import { AwsClient } from "aws4fetch";
+import { StatusError } from "itty-router";
+import { log } from "./logger";
 
 enum TextTypes {
-    SSML = 'ssml',
-    TEXT = 'text',
+    SSML = "ssml",
+    TEXT = "text",
 }
 
 export async function generateTTSAudio(term: string, reading: string, pitch: string, env: Env): Promise<Blob> {
     const accessKeyId = env.AWS_ACCESS_KEY_ID;
     const secretAccessKey = env.AWS_SECRET_ACCESS_KEY;
-    const region = 'eu-central-1';
+    const region = "eu-central-1";
 
     let text_type: TextTypes = TextTypes.TEXT;
     let text = term;
@@ -33,21 +33,21 @@ export async function generateTTSAudio(term: string, reading: string, pitch: str
     });
 
     const requestBody = JSON.stringify({
-        Engine: 'neural',
-        LanguageCode: 'ja-JP',
-        OutputFormat: 'mp3',
+        Engine: "neural",
+        LanguageCode: "ja-JP",
+        OutputFormat: "mp3",
         Text: text,
         TextType: text_type,
-        VoiceId: 'Tomoko',
+        VoiceId: "Tomoko",
     });
 
     const response = await aws.fetch(`https://polly.${region}.amazonaws.com/v1/speech`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: requestBody,
     });
 
-    log('info', 'generated_new_tts', `Generated new TTS audio for term: ${term}, reading: ${reading}`, {
+    log("info", "generated_new_tts", `Generated new TTS audio for term: ${term}, reading: ${reading}`, {
         term: term,
         reading: reading,
         pitch: pitch,
@@ -56,14 +56,14 @@ export async function generateTTSAudio(term: string, reading: string, pitch: str
     });
 
     if (!response.ok) {
-        const response_text = await response.text();
-        log('error', 'polly_failed', `AWS Polly request failed with status ${response.status} for term: ${term}, reading: ${reading}`, {
+        log("error", "polly_failed", `AWS Polly request failed with status ${response.status} for term: ${term}, reading: ${reading}`, {
             status: response.status,
-            response_text: response_text,
+            response_text: await response.text(),
             term: term,
             reading: reading,
         });
-        throw new StatusError(response.status, 'AWS Polly request failed.');
+
+        throw new StatusError(response.status, "AWS Polly request failed.");
     }
 
     return await response.blob();
