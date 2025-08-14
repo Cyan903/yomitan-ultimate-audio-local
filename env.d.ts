@@ -4,6 +4,7 @@ declare global {
     interface Env {
         AUTHENTICATION_ENABLED: true;
         API_KEYS: string;
+        HOST_URL: string;
         DB: Database;
 
         // Polly

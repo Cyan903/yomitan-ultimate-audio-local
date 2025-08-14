@@ -21,9 +21,9 @@ export async function generateYomitanResponseObject(entries: AudioEntry[], ttsEn
             const folder = encodeURIComponent(parts[0]);
             const file = encodeURIComponent(parts[1]);
 
-            audioUrl = new URL(`/audio/get/${entry.source}/${folder}/${file}`, url.origin);
+            audioUrl = new URL(`/audio/get/${entry.source}/${folder}/${file}`, env.HOST_URL);
         } else {
-            audioUrl = new URL(`/audio/get/${entry.source}/${encodeURIComponent(entry.file)}`, url.origin);
+            audioUrl = new URL(`/audio/get/${entry.source}/${encodeURIComponent(entry.file)}`, env.HOST_URL);
         }
 
         if (env.AUTHENTICATION_ENABLED) {

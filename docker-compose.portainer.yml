@@ -1,0 +1,21 @@
+name: yomitan-ultimate-audio-local
+
+services:
+    yomitan-ultimate-audio-local:
+        image: cyan903/yomitan-ultimate-audio-local
+        container_name: yomitan-ultimate-audio-local
+        restart: always
+        ports:
+            - 8001:8001
+        volumes:
+            - ./data:/app/data
+        environment:
+            HOST_URL: "https://yomitan.example.com"
+            HOST: "http://host.local.internal"
+            PORT: 8001
+            AUTHENTICATION_ENABLED: true
+            API_KEYS: "abc,123"
+            AWS_POLLY_ENABLED: false
+            AWS_ACCESS_KEY_ID: ""
+            AWS_SECRET_ACCESS_KEY: ""
+

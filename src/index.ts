@@ -16,6 +16,7 @@ const server = http.createServer(async (req, res) => {
         .fetch(request, {
             AUTHENTICATION_ENABLED: process.env.AUTHENTICATION_ENABLED == "true",
             API_KEYS: process.env.API_KEYS,
+            HOST_URL: process.env.HOST_URL,
             DB,
 
             // Polly

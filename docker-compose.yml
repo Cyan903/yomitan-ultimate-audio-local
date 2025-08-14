@@ -1,0 +1,20 @@
+services:
+  yomitan-ultimate-audio-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: yomitan-ultimate-audio-local:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data:/app/data
+    environment:
+      HOST_URL: "http://localhost:3000"
+      HOST: "http://localhost"
+      PORT: 3000
+      AUTHENTICATION_ENABLED: true
+      API_KEYS: "abc,123"
+      AWS_POLLY_ENABLED: false
+      AWS_ACCESS_KEY_ID: ""
+      AWS_SECRET_ACCESS_KEY: ""
+

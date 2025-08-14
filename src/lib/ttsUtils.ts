@@ -85,8 +85,7 @@ export async function createTTSEntries(term: string, reading: string, sources: A
         const finalTtsCollection = [...pitchDBEntries, ...uniqueTtsPronunciations];
 
         const ttsEntries: YomitanAudioSource[] = finalTtsCollection.map((entry) => {
-            const url = new URL(request.url);
-            const audioUrl = new URL("/audio/tts", url.origin);
+            const audioUrl = new URL("/audio/tts", env.HOST_URL);
 
             audioUrl.searchParams.set("term", entry.expression);
             audioUrl.searchParams.set("reading", entry.reading);

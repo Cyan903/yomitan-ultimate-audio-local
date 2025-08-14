@@ -1,0 +1,8 @@
+# Dev
+/node_modules
+.env
+
+# Private
+/data
+/.data
+

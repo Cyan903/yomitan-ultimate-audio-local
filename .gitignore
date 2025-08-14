@@ -1,14 +1,12 @@
 # Config
 .vscode
 .env
+.data
 
 # Node
-node_modules
-bundled
-
-# TS
-/dist/*
-!/dist/.gitkeep
+/node_modules
+/bundled
+/dist
 
 # Export
 /data/*
