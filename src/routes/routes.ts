@@ -86,7 +86,7 @@ router.get('/tts', withApiKey, async (request: IRequest, env: Env) => {
 
     const generatedAudio = await generateTTSAudio(term, reading, pitch, env);
 
-    await saveAudioTTS(tts_identifier, generatedAudio, env);
+    await saveAudioTTS(tts_identifier, generatedAudio);
     return mp3(generatedAudio, { status: 200 });
 });
 

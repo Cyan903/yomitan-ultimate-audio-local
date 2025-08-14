@@ -1,7 +1,7 @@
 import { Database } from "sqlite";
 
 declare global {
-    declare interface Env {
+    interface Env {
         AUTHENTICATION_ENABLED: true;
         API_KEYS: string;
         DB: Database;

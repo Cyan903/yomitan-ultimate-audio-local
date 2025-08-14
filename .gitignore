@@ -8,6 +8,10 @@ wrangler.toml
 node_modules
 bundled
 
+# TS
+/dist/*
+!/dist/.gitkeep
+
 # Export
 /data/*
 !/data/.gitkeep
