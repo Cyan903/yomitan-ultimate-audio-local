@@ -76,8 +76,3 @@ With `HOST_URL` as `https://example.com`:
     "url": "https://example.com/audio/get/nhk16/audio/20180221161451.mp3?apiKey=380c4598f457"
 },
 ```
-
-## License
-
-[MIT](MIT)
-
